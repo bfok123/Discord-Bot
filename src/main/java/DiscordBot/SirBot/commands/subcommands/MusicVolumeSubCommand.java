@@ -27,15 +27,15 @@ public class MusicVolumeSubCommand extends SubCommand {
 	@Override
 	public void onCommand(MessageReceivedEvent e, String[] msgArgs) {
 		if(msgArgs.length == 1) {
-			parentCommand.sendUsageEmbed(e, new EmbedBuilder().setDescription("Enter a volume level from 0 to 100.").build());
+			parentCommand.sendUsageEmbed(new EmbedBuilder().setDescription("Enter a volume level from 0 to 100.").build());
 		} else if(msgArgs.length == 2) {
 			int volume = Integer.parseInt(msgArgs[1]);
 			if(volume < 0) volume = 0;
 			else if(volume > 100) volume = 100;
 			player.setVolume(volume);
-			parentCommand.sendEmbed(e, new EmbedBuilder().setTitle("Volume").setDescription("Set to " + volume).build());
+			parentCommand.sendEmbed(new EmbedBuilder().setTitle("Volume").setDescription("Set to " + volume).build());
 		} else {
-			parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription("That is not a valid command.").build());
+			parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription("That is not a valid command.").build());
 		}
 	}
 

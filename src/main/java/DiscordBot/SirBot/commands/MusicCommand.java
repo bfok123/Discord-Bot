@@ -16,6 +16,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
+import DiscordBot.SirBot.App;
 import DiscordBot.SirBot.commands.subcommands.MusicBackSubCommand;
 import DiscordBot.SirBot.commands.subcommands.MusicElapsedSubCommand;
 import DiscordBot.SirBot.commands.subcommands.MusicJoinSubCommand;
@@ -28,16 +29,18 @@ import DiscordBot.SirBot.commands.subcommands.MusicSkipSubCommand;
 import DiscordBot.SirBot.commands.subcommands.MusicSongSubCommand;
 import DiscordBot.SirBot.commands.subcommands.MusicVolumeSubCommand;
 import DiscordBot.SirBot.commands.subcommands.SubCommand;
+import DiscordBot.SirBot.gui.MainFrame;
 import DiscordBot.SirBot.music.AudioPlayerSendHandler;
 import DiscordBot.SirBot.music.TrackScheduler;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AudioManager;
 
-public class MusicCommand extends Command{
+public class MusicCommand extends Command {
 	private AudioManager manager;
 	private AudioPlayerManager playerManager;
 	private AudioPlayer player;
@@ -77,7 +80,7 @@ public class MusicCommand extends Command{
 
 	@Override
 	public String getDescription() {
-		return "Play music in a voice channel.";
+		return "play music in a voice channel";
 	}
 
 	@Override
@@ -86,7 +89,7 @@ public class MusicCommand extends Command{
 		mostRecentEvent = e;
 		
 		if(msgArgs.length == 1) {
-			sendHelpMessage(e);
+			sendHelpMessage();
 		} else {
 			// sub commands get msgArgs that start with their name
 			String[] subCommandMsgArgs = new String[msgArgs.length - 1];
@@ -101,45 +104,31 @@ public class MusicCommand extends Command{
 				}
 			}
 			
-			sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+			sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 		}
 	}
 	
 	@Override
-	public Message sendMessage(MessageReceivedEvent e, Message message) {
-		return e.getChannel().sendMessage(new MessageBuilder().append(":musical_note: ").append(message.getContent()).append(" :musical_note:").build()).complete();
-	}
-	
-	@Override
-	public Message sendEmbed(MessageReceivedEvent e, MessageEmbed embed) {
+	public Message sendEmbed(MessageEmbed embed) {
 		embed = new EmbedBuilder(embed).setColor(Color.CYAN).build();
-		return e.getChannel().sendMessage(embed).complete();
-	}
-	
-	@Override
-	public Message sendMessageWithMention(MessageReceivedEvent e, Message message) {
-		return e.getChannel().sendMessage(new MessageBuilder().append(e.getAuthor()).append(": ").append(":musical_note: ").append(message.getContent()).append(" :musical_note:").build()).complete();
+		return App.getBotTextChannel().sendMessage(embed).complete();
 	}
 
 	@Override
-	public Message sendUsageEmbed(MessageReceivedEvent e, MessageEmbed embed) {
+	public Message sendUsageEmbed(MessageEmbed embed) {
 		embed = new EmbedBuilder(embed).setTitle("Usage - Music").setColor(Color.YELLOW).build();
-		return e.getChannel().sendMessage(embed).complete();
+		return App.getBotTextChannel().sendMessage(embed).complete();
 	}
 	
 	@Override
-	public void sendHelpMessage(MessageReceivedEvent e) {
+	public void sendHelpMessage() {
 		EmbedBuilder builder = new EmbedBuilder();
 		
 		for(SubCommand subCommand : subCommands) {
-			builder.appendDescription(" - " + subCommand.getName() + " : " + subCommand.getDescription() + "\n");
+			builder.appendDescription("- " + subCommand.getName() + " : " + subCommand.getDescription() + "\n");
 		}
 		
-		sendUsageEmbed(e, builder.build());
-	}
-	
-	public MessageReceivedEvent getMostRecentEvent() {
-		return mostRecentEvent;
+		sendUsageEmbed(builder.build());
 	}
 	
 	public void resetVotes() {

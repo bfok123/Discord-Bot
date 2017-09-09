@@ -38,7 +38,7 @@ public class MusicJoinSubCommand extends SubCommand {
 		String mention = "<@" + e.getAuthor().getId() + ">";
 		
 		if(msgArgs.length == 1) {
-			 parentCommand.sendUsageEmbed(e, new EmbedBuilder().setDescription(mention + ", enter a voice channel name.").build());
+			 parentCommand.sendUsageEmbed(new EmbedBuilder().setDescription(mention + ", enter a voice channel name.").build());
 		} else if(msgArgs.length > 1) {
 			String channelName = e.getMessage().getContent().substring(12);
 			boolean voiceChannelExists = !e.getGuild().getVoiceChannelsByName(channelName, false).isEmpty();
@@ -48,13 +48,13 @@ public class MusicJoinSubCommand extends SubCommand {
 				manager.setSendingHandler(sendHandler);
 				manager.openAudioConnection(getVoiceChannelByName(e.getGuild(), channelName));
 				
-				parentCommand.sendEmbed(e, new EmbedBuilder().setTitle("Joined Channel").setDescription(channelName).build());
+				parentCommand.sendEmbed(new EmbedBuilder().setTitle("Joined Channel").setDescription(channelName).build());
 				player.setPaused(false);
 			} else if(!voiceChannelExists) {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", there are no voice channels in this server that match that name.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", there are no voice channels in this server that match that name.").build());
 			}
 		} else {
-			parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+			parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 		}
 	}
 	

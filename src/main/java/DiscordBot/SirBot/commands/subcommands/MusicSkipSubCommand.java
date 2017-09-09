@@ -6,6 +6,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import DiscordBot.SirBot.commands.Command;
+import DiscordBot.SirBot.commands.MusicCommand;
 import DiscordBot.SirBot.music.TrackScheduler;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -44,30 +45,30 @@ public class MusicSkipSubCommand extends SubCommand {
 		
 		if(msgArgs.length == 1) {
 			if(player.getPlayingTrack() == null) {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", there is no song currently playing.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", there is no song currently playing.").build());
 				return;
 			} else if(usersWhoVoted.contains(user)) {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", you have already voted to skip this song.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", you have already voted to skip this song.").build());
 				return;
 			} else {
 				skips++;
 				usersWhoVoted.add(user);
 				
 				if(skips < 3) {
-					parentCommand.sendEmbed(e, new EmbedBuilder().setTitle("Skip Vote").setDescription("There are currently " + skips + " out of 3 votes to skip this song.").build()); 
+					parentCommand.sendEmbed(new EmbedBuilder().setTitle("Skip Vote").setDescription("There are currently " + skips + " out of 3 votes to skip this song.").build()); 
 					return;
 				} else if(skips == 3) {
 					resetVotes();
-					parentCommand.sendEmbed(e, new EmbedBuilder().setTitle("Song Skipped").setDescription(currTrack.getInfo().title).build());
-					trackScheduler.nextTrack(player.getPlayingTrack(), true);
+					parentCommand.sendEmbed(new EmbedBuilder().setTitle("Song Skipped").setDescription(currTrack.getInfo().title).build());
+					trackScheduler.nextTrack(true);
 					return;
 				}
 			}
 		} else if(msgArgs.length == 2) {
 			if(msgArgs[1].equals("force")) {
 				resetVotes();
-				parentCommand.sendEmbed(e, new EmbedBuilder().setTitle("Song Force Skipped").setDescription(currTrack.getInfo().title).build());
-				trackScheduler.nextTrack(player.getPlayingTrack(), true);
+				parentCommand.sendEmbed(new EmbedBuilder().setTitle("Song Force Skipped").setDescription(player.getPlayingTrack().getInfo().title).build());
+				trackScheduler.nextTrack(true);
 				return;
 			}
 		} else if(msgArgs.length == 3) {
@@ -81,17 +82,17 @@ public class MusicSkipSubCommand extends SubCommand {
 						embedBuilder.appendDescription((i + 1) + ". " + skippedTracks[i].getInfo().title + "\n");
 					}
 					
-					parentCommand.sendEmbed(e, embedBuilder.setTitle("Skipped " + numTracks + " Tracks").build());
+					parentCommand.sendEmbed(embedBuilder.setTitle("Skipped " + numTracks + " Tracks").build());
 					
 					// this is handled here and not in the nextTrackNum() method so that the bot says "Now Playing" after "Skipped [num] Tracks"
-					trackScheduler.nextTrack(null, false);
+					trackScheduler.nextTrack(false);
 				} catch (Exception ex) {
-					parentCommand.sendUsageEmbed(e, new EmbedBuilder().setDescription(mention + ", enter a number of songs to skip (must be a positive integer).").build());
+					parentCommand.sendUsageEmbed(new EmbedBuilder().setDescription(mention + ", enter a number of songs to skip (must be a positive integer).").build());
 				}
 				return;
 			}
 		}
-		parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+		parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 	}
 	
 	public void resetVotes() {

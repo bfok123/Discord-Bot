@@ -37,13 +37,13 @@ public class StopwatchTimeSubCommand extends SubCommand {
 			if(userHasStopwatch) {
 				Stopwatch stopwatch = stopwatches.get(user);
 				
-				parentCommand.sendEmbed(e, new EmbedBuilder().setTitle("Stopwatch").setDescription(mention + ", you have been playing for " + stopwatch.getHours() + " hour(s), " + stopwatch.getMinutes() +
+				parentCommand.sendEmbed(new EmbedBuilder().setTitle("Stopwatch").setDescription(mention + ", you have been playing for " + stopwatch.getHours() + " hour(s), " + stopwatch.getMinutes() +
 		                " minute(s), and " + stopwatch.getSeconds() + " second(s).").build());
 			} else {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", you do not have a stopwatch.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", you do not have a stopwatch.").build());
 			}
 		} else {
-			parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+			parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 		}
 	}
 

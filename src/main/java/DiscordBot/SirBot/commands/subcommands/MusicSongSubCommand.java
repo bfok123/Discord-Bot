@@ -33,12 +33,12 @@ public class MusicSongSubCommand extends SubCommand {
 		String mention = "<@" + e.getAuthor().getId() + ">";
 		
 		if(player.getPlayingTrack() == null) {
-			parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", there is no song currently playing.").build());
+			parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", there is no song currently playing.").build());
 		} else if(msgArgs.length == 1) {
 			AudioTrack track = player.getPlayingTrack();
-			parentCommand.sendEmbed(e, new EmbedBuilder().setTitle("Now Playing").setDescription(track.getInfo().title).build());
+			parentCommand.sendEmbed(new EmbedBuilder().setTitle("Now Playing").setDescription(track.getInfo().title).build());
 		} else {
-			parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+			parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 		}
 	}
 

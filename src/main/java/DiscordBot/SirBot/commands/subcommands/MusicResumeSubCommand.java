@@ -32,16 +32,16 @@ public class MusicResumeSubCommand extends SubCommand {
 		
 		if(msgArgs.length == 1) {
 			if(player.getPlayingTrack() == null) {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", there is no song currently playing.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", there is no song currently playing.").build());
 			} else if(!e.getGuild().getAudioManager().isConnected()) {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", the bot is not connected to a voice channel.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", the bot is not connected to a voice channel.").build());
 			} else if(!player.isPaused()) {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", the song: \"" + player.getPlayingTrack().getInfo().title + "\" is already playing.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", the song: \"" + player.getPlayingTrack().getInfo().title + "\" is already playing.").build());
 			} else if(player.isPaused()) {
 				player.setPaused(false);
 			}
 		} else {
-			parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+			parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 		}
 	}
 

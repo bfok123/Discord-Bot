@@ -31,13 +31,13 @@ public class MusicBackSubCommand extends SubCommand {
 			int previousSongsLength = trackScheduler.getPreviousSongsAsArray().length;
 			
 			if(previousSongsLength > 0) {
-				parentCommand.sendEmbed(e, new EmbedBuilder().setTitle("Previous Song").setDescription(mention + " has requested to play the previous song.").build());
+				parentCommand.sendEmbed(new EmbedBuilder().setTitle("Previous Song").setDescription(mention + " has requested to play the previous song.").build());
 				trackScheduler.prevTrack();
 			} else {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", there are no previous songs to play.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", there are no previous songs to play.").build());
 			}
 		} else {
-			parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+			parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 		}
 	}
 

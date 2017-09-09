@@ -33,9 +33,13 @@ public class TrackScheduler extends AudioEventAdapter {
 		previousSongs = new LinkedBlockingDeque<AudioTrack>();
 	}
 	
-	public void queue(AudioTrack track) {
+	public void queue(AudioTrack track, boolean addToBeginning) {
 		if(!player.startTrack(track, true)) {
-			queue.offer(track);
+			if(addToBeginning) {
+				queue.offerFirst(track);
+			} else {
+				queue.offer(track);
+			}
 		}
 		
 		if(player.getPlayingTrack() == null) {
@@ -44,13 +48,17 @@ public class TrackScheduler extends AudioEventAdapter {
 	}
 	
 	// play next track
-	public void nextTrack(AudioTrack currTrack, boolean addToPreviousSongs) {	
+	public AudioTrack nextTrack(boolean addToPreviousSongs) {
+		AudioTrack skippedTrack = player.getPlayingTrack();
+		
 		if(addToPreviousSongs) {
-			previousSongs.offerFirst(currTrack);
+			previousSongs.offerFirst(skippedTrack.makeClone());
 		}
 		
 		player.startTrack(queue.poll(), false);
 		command.resetVotes();
+		
+		return skippedTrack;
 	}
 	
 	// skip over a given number of tracks, return those tracks
@@ -84,25 +92,24 @@ public class TrackScheduler extends AudioEventAdapter {
 	
 	@Override
 	public void onPlayerPause(AudioPlayer player) {
-		command.sendEmbed(command.getMostRecentEvent(), new EmbedBuilder().setTitle("Song Paused").setDescription(player.getPlayingTrack().getInfo().title).build());
-
+		command.sendEmbed(new EmbedBuilder().setTitle("Song Paused").setDescription(player.getPlayingTrack().getInfo().title).build());
 	}
 
 	@Override
 	public void onPlayerResume(AudioPlayer player) {
-		command.sendEmbed(command.getMostRecentEvent(), new EmbedBuilder().setTitle("Song Resumed").setDescription(player.getPlayingTrack().getInfo().title).build());
+		command.sendEmbed(new EmbedBuilder().setTitle("Song Resumed").setDescription(player.getPlayingTrack().getInfo().title).build());
 
 	}
 
 	@Override
 	public void onTrackStart(AudioPlayer player, AudioTrack track) {
-		command.sendEmbed(command.getMostRecentEvent(), new EmbedBuilder().setTitle("Now Playing").setDescription(track.getInfo().title).build());
+		command.sendEmbed(new EmbedBuilder().setTitle("Now Playing").setDescription(track.getInfo().title).build());
 	}
 
 	@Override
 	public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
 		if (endReason.mayStartNext) {
-			nextTrack(track, true);
+			nextTrack(true);
 		}
 
 	    // endReason == FINISHED: A track finished or died by an exception (mayStartNext = true).
@@ -115,14 +122,14 @@ public class TrackScheduler extends AudioEventAdapter {
 
 	@Override
 	public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
-		command.sendErrorEmbed(command.getMostRecentEvent(), new EmbedBuilder().setDescription("The track threw an exception. Starting next track.").build());
-		nextTrack(track, true);
+		command.sendErrorEmbed(new EmbedBuilder().setDescription("The track threw an exception. Starting next track.").build());
+		nextTrack(true);
 	}
 
 	@Override
 	public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
-		command.sendErrorEmbed(command.getMostRecentEvent(), new EmbedBuilder().setDescription("The track is stuck. Starting next track.").build());
-		nextTrack(track, true);
+		command.sendErrorEmbed(new EmbedBuilder().setDescription("The track is stuck. Starting next track.").build());
+		nextTrack(true);
 	}
 	
 	public AudioTrack[] getQueueAsArray() {

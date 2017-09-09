@@ -35,28 +35,23 @@ public class MusicElapsedSubCommand extends SubCommand {
 			AudioTrack track = player.getPlayingTrack();
 			
 			if(track == null) {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", there is no song currently playing.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", there is no song currently playing.").build());
 			} else if(track != null) {
-				String timeElapsed = new DecimalFormat("##.##").format(track.getPosition() / 1000.0 / 60.0);
-				String totalTime = new DecimalFormat("##.##").format(track.getDuration() / 1000.0 / 60.0);
+				String timeElapsed = new DecimalFormat("#0.00").format(track.getPosition() / (1000.0 * 60.0));
+				String totalTime = new DecimalFormat("#0.00").format(track.getDuration() / (1000.0 * 60.0));
 				
 				String[] duration = totalTime.split("\\.");
 				String durationMinutes = duration[0];
 				String durationSeconds = duration[1];
 				
-				if(track.getPosition() == 0) {
-					parentCommand.sendMessageWithMention(e, "0:00 / " + durationMinutes + ":" + durationSeconds);
-					return;
-				}
-				
 				String[] elapsed = timeElapsed.split("\\.");
 				String elapsedMinutes = elapsed[0];
 				String elapsedSeconds = elapsed[1];
 				
-				parentCommand.sendMessageWithMention(e, elapsedMinutes + ":" + elapsedSeconds + " / " + durationMinutes + ":" + durationSeconds);
+				parentCommand.sendEmbed(new EmbedBuilder().setTitle("Elapsed").setDescription(elapsedMinutes + ":" + elapsedSeconds + " / " + durationMinutes + ":" + durationSeconds).build());
 			}
 		} else {
-			parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+			parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 		}
 	}
 

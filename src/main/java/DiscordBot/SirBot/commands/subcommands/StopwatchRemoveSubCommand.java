@@ -37,13 +37,13 @@ public class StopwatchRemoveSubCommand extends SubCommand {
 			if(userHasStopwatch) {
 				stopwatches.get(user).cancel();
 				stopwatches.remove(user);
-				parentCommand.sendEmbed(e, new EmbedBuilder().setTitle("Removed Stopwatch").setDescription(mention).build());
+				parentCommand.sendEmbed(new EmbedBuilder().setTitle("Removed Stopwatch").setDescription(mention).build());
 			}
 			else {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", you do not have a stopwatch.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", you do not have a stopwatch.").build());
 			}
 		} else {
-			parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+			parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 		}
 	}
 

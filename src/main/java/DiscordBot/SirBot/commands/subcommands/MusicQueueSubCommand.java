@@ -36,7 +36,7 @@ public class MusicQueueSubCommand extends SubCommand {
 			AudioTrack[] queue = trackScheduler.getQueueAsArray();
 			
 			if(queue.length == 0) {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", there are no songs currently in queue.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", there are no songs currently in queue.").build());
 			} else {
 				builder.setTitle("Queue (" + queue.length + " song(s))");
 				
@@ -45,22 +45,22 @@ public class MusicQueueSubCommand extends SubCommand {
 				}
 			}
 			
-			parentCommand.sendEmbed(e, builder.build());
+			parentCommand.sendEmbed(builder.build());
 			return;
 		} else if(msgArgs.length == 2) {
 			AudioTrack[] queue = trackScheduler.getQueueAsArray();
 			
 			if(msgArgs[1].equals("clear")) {
 				if(queue.length == 0) {
-					parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", there are no songs currently in queue.").build());
+					parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", there are no songs currently in queue.").build());
 					return;
 				}
 				int numOfSongsCleared = trackScheduler.clearQueue();
-				parentCommand.sendEmbed(e, new EmbedBuilder().setTitle("Queue Cleared").setDescription(numOfSongsCleared + " songs removed.").build());
+				parentCommand.sendEmbed(new EmbedBuilder().setTitle("Queue Cleared").setDescription(numOfSongsCleared + " songs removed.").build());
 				return;
 			}
 		}
-		parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+		parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 	}
 
 }

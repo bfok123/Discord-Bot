@@ -31,14 +31,14 @@ public class MusicPauseSubCommand extends SubCommand {
 		
 		if(msgArgs.length == 1) {
 			if(player.getPlayingTrack() == null) {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", there is no song currently playing.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", there is no song currently playing.").build());
 			} else if(!player.isPaused()){
 				player.setPaused(true);
 			} else if(player.isPaused()) {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", the current song is already paused.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", the current song is already paused.").build());
 			}
 		} else {
-			parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+			parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 		}
 	}
 

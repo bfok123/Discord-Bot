@@ -38,16 +38,16 @@ public class StopwatchResumeSubCommand extends SubCommand {
 				Stopwatch stopwatch = stopwatches.get(e.getAuthor());
 				
 				if(!stopwatch.isPaused()) {
-					parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", your stopwatch is already running.").build());
+					parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", your stopwatch is already running.").build());
 				} else {
 					stopwatch.unpause();
-					parentCommand.sendEmbed(e, new EmbedBuilder().setTitle("Resumed Stopwatch").setDescription(mention).build());
+					parentCommand.sendEmbed(new EmbedBuilder().setTitle("Resumed Stopwatch").setDescription(mention).build());
 				}
 			} else {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", you do not have a stopwatch.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", you do not have a stopwatch.").build());
 			}
 		} else {
-			parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+			parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 		}
 	}
 

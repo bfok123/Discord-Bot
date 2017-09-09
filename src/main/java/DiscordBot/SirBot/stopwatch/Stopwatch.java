@@ -43,9 +43,9 @@ public class Stopwatch extends Timer {
 		String mention = "<@" + e.getAuthor().getId() + ">";
 		hours++;
 		if(hours == 1) {
-			command.sendEmbed(e, new EmbedBuilder().setTitle("Stopwatch").setDescription(mention + ", you have played for " + hours + " hour.").build());
+			command.sendEmbed(new EmbedBuilder().setTitle("Stopwatch").setDescription(mention + ", you have played for " + hours + " hour.").build());
 		} else if(hours > 1) {
-			command.sendEmbed(e, new EmbedBuilder().setTitle("Stopwatch").setDescription(mention + ", you have played for " + hours + " hours.").build());
+			command.sendEmbed(new EmbedBuilder().setTitle("Stopwatch").setDescription(mention + ", you have played for " + hours + " hours.").build());
 		}
 	}
 	

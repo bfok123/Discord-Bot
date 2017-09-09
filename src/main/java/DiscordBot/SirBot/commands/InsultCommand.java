@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import DiscordBot.SirBot.App;
 import DiscordBot.SirBot.Info;
 import DiscordBot.SirBot.commands.subcommands.SubCommand;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -44,7 +45,7 @@ public class InsultCommand extends Command {
 
 	@Override
 	public String getDescription() {
-		return "Insult a given person or user in the server.";
+		return "insult a given person or user in the server";
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class InsultCommand extends Command {
 		String mention = "<@" + user.getId() + ">";
 		
 		if(msgArgs.length == 1) {
-			sendHelpMessage(e);
+			sendHelpMessage();
 			return;
 		} else if(msgArgs.length >= 2) {
 			MessageBuilder builder = new MessageBuilder();
@@ -63,7 +64,7 @@ public class InsultCommand extends Command {
 			if(containsMention(victimName)) {
 				User victimUser = getUserByNameOrNickname(e.getGuild(), victimName.substring(1));
 				if(victimUser == null) {
-					sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that user does not exist.").build());
+					sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that user does not exist.").build());
 					return;
 				} else {
 					builder.append(victimUser);
@@ -78,7 +79,7 @@ public class InsultCommand extends Command {
 				CooldownTimer timer = cooldownTimers.get(e.getAuthor());
 				
 				if(!timer.isOver()) {
-					sendEmbed(e, new EmbedBuilder().setTitle("Insult Cooldown").setDescription(mention + ", you have " + timer.getCooldown() + " second(s) remaining until you can insult another person.").setColor(Color.YELLOW).build());
+					sendEmbed(new EmbedBuilder().setTitle("Insult Cooldown").setDescription(mention + ", you have " + timer.getCooldown() + " second(s) remaining until you can insult another person.").setColor(Color.YELLOW).build());
 					return;
 				} else if(timer.isOver()) {
 					timer.resetCooldown();
@@ -100,25 +101,25 @@ public class InsultCommand extends Command {
 			int randomInsultIndex = (int) (Math.random() * insults.length);
 			builder.append(" " + insults[randomInsultIndex]);
 			
-			sendMessage(e, builder.build());
+			sendMessage(builder.build());
 		} else {
-			sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+			sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 		}
 	}
 	
 	@Override
-	public Message sendUsageEmbed(MessageReceivedEvent e, MessageEmbed embed) {
+	public Message sendUsageEmbed(MessageEmbed embed) {
 		embed = new EmbedBuilder(embed).setTitle("Usage - Insult").setColor(Color.YELLOW).build();
-		return e.getChannel().sendMessage(embed).complete();
+		return App.getBotTextChannel().sendMessage(embed).complete();
 	}
 	
 	@Override
-	public void sendHelpMessage(MessageReceivedEvent e) {
+	public void sendHelpMessage() {
 		EmbedBuilder builder = new EmbedBuilder();
 		
 		builder.setDescription("Enter any name or mention a user in the server to insult");
 		
-		sendUsageEmbed(e, builder.build());
+		sendUsageEmbed(builder.build());
 	}
 	
 	/*

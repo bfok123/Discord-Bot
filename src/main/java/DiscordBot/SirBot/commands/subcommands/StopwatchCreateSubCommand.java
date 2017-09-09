@@ -49,13 +49,13 @@ public class StopwatchCreateSubCommand extends SubCommand {
 				}, 0, 1000);
 				
 				stopwatches.put(user, stopwatch);
-				parentCommand.sendEmbed(e, new EmbedBuilder().setTitle("Stopwatch").setDescription(mention + ", you have started a stopwatch.").build());
+				parentCommand.sendEmbed(new EmbedBuilder().setTitle("Stopwatch").setDescription(mention + ", you have started a stopwatch.").build());
 			}
 			else {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", you already have a stopwatch.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", you already have a stopwatch.").build());
 			}
 		} else {
-			parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+			parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 		}
 	}
 

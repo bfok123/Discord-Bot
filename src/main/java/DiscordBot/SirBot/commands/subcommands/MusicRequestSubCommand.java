@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import DiscordBot.SirBot.commands.Command;
+import DiscordBot.SirBot.commands.MusicCommand;
 import DiscordBot.SirBot.music.TrackScheduler;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -18,6 +19,7 @@ public class MusicRequestSubCommand extends SubCommand {
 
 	public MusicRequestSubCommand(Command parentCommand, AudioPlayerManager playerManager, TrackScheduler trackScheduler) {
 		super(parentCommand);
+		
 		this.playerManager = playerManager;
 		this.trackScheduler = trackScheduler;
 	}
@@ -29,7 +31,7 @@ public class MusicRequestSubCommand extends SubCommand {
 
 	@Override
 	public String getDescription() {
-		return "add a song to the queue by entering a URL";
+		return "add a song to the end of the queue by entering a URL, or use \"first\" to add to the beginning of the queue";
 	}
 
 	@Override
@@ -37,44 +39,54 @@ public class MusicRequestSubCommand extends SubCommand {
 		final String mention = "<@" + e.getAuthor().getId() + ">";
 		
 		if(msgArgs.length == 1) {
-			parentCommand.sendUsageEmbed(e, new EmbedBuilder().setDescription(mention + ", enter a track or playlist URL.").build());
+			parentCommand.sendUsageEmbed(new EmbedBuilder().setDescription(mention + ", enter a track or playlist URL.").build());
 		} else if(msgArgs.length > 1) {
 			if(!e.getGuild().getAudioManager().isConnected()) {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", the bot is not connected to a voice channel.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", the bot is not connected to a voice channel.").build());
 				return;
 			}
 			
-			String trackURL = e.getMessage().getContent().substring(15);
+			final boolean addToBeginning = msgArgs[1].equals("first") ? true : false;
 			
-			playerManager.loadItem(trackURL, new AudioLoadResultHandler() {
-				
-				@Override
-				public void loadFailed(FriendlyException arg0) {
-					parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription("Track load failed.").build());
-				}
-
-				@Override
-				public void noMatches() {
-					parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", no matches found.").build());
-				}
-
-				@Override
-				public void playlistLoaded(AudioPlaylist playlist) {
-					parentCommand.sendEmbed(e, new EmbedBuilder().setTitle("Playlist Added").setDescription(playlist.getName()).build());
-					for(AudioTrack track : playlist.getTracks()) {
-						trackScheduler.queue(track);
-					}
-				}
-
-				@Override
-				public void trackLoaded(AudioTrack track) {
-					parentCommand.sendEmbed(e, new EmbedBuilder().setTitle("Track Added").setDescription(track.getInfo().title).build());
-					trackScheduler.queue(track);
-				}
-			});
+			String trackUrl = addToBeginning ? e.getMessage().getContent().substring(21) : e.getMessage().getContent().substring(15);
+			
+			handleTrackRequest(mention, trackUrl, addToBeginning);
 		} else {
-			parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+			parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 		}
+	}
+	
+	public void handleTrackRequest(final String mention, String trackUrl, final boolean addToBeginning) {
+		playerManager.loadItem(trackUrl, new AudioLoadResultHandler() {
+			
+			@Override
+			public void loadFailed(FriendlyException arg0) {
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription("Track load failed.").build());
+			}
+
+			@Override
+			public void noMatches() {
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", no matches found.").build());
+			}
+
+			@Override
+			public void playlistLoaded(AudioPlaylist playlist) {
+				if(addToBeginning) parentCommand.sendEmbed(new EmbedBuilder().setTitle("Playlist Added to Beginning").setDescription(playlist.getName()).build());
+				else if(!addToBeginning) parentCommand.sendEmbed(new EmbedBuilder().setTitle("Playlist Added").setDescription(playlist.getName()).build());
+				
+				for(AudioTrack track : playlist.getTracks()) {
+					trackScheduler.queue(track, addToBeginning);
+				}
+			}
+
+			@Override
+			public void trackLoaded(AudioTrack track) {
+				if(addToBeginning) parentCommand.sendEmbed(new EmbedBuilder().setTitle("Track Added to Beginning").setDescription(track.getInfo().title).build());
+				else if(!addToBeginning) parentCommand.sendEmbed(new EmbedBuilder().setTitle("Track Added").setDescription(track.getInfo().title).build());
+				
+				trackScheduler.queue(track, addToBeginning);
+			}
+		});
 	}
 
 }

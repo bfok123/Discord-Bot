@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import DiscordBot.SirBot.App;
 import DiscordBot.SirBot.commands.subcommands.StopwatchCreateSubCommand;
 import DiscordBot.SirBot.commands.subcommands.StopwatchPauseSubCommand;
 import DiscordBot.SirBot.commands.subcommands.StopwatchRemoveSubCommand;
@@ -44,13 +45,13 @@ public class StopwatchCommand extends Command {
 
 	@Override
 	public String getDescription() {
-		return "Allows you to create a stopwatch that will notify you every hour.";
+		return "allows you to create a stopwatch that will notify you every hour";
 	}
 
 	@Override
 	public void onCommand(MessageReceivedEvent e, String[] msgArgs) {
 		if(msgArgs.length == 1) {
-			sendHelpMessage(e);
+			sendHelpMessage();
 		} else {
 			String mention = "<@" + e.getAuthor().getId() + ">";
 			
@@ -67,40 +68,30 @@ public class StopwatchCommand extends Command {
 				}
 			}
 			
-			sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+			sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 		}
 	}
 	
 	@Override
-	public Message sendMessage(MessageReceivedEvent e, Message message) {
-		return e.getChannel().sendMessage(new MessageBuilder().append(":stopwatch: ").append(message.getContent()).append(" :stopwatch:").build()).complete();
-	}
-	
-	@Override
-	public Message sendMessageWithMention(MessageReceivedEvent e, Message message) {
-		return e.getChannel().sendMessage(new MessageBuilder().append(e.getAuthor()).append(": ").append(":stopwatch: ").append(message.getContent()).append(" :stopwatch:").build()).complete();
-	}
-	
-	@Override
-	public Message sendEmbed(MessageReceivedEvent e, MessageEmbed embed) {
+	public Message sendEmbed(MessageEmbed embed) {
 		embed = new EmbedBuilder(embed).setColor(Color.WHITE).build();
-		return e.getChannel().sendMessage(embed).complete();
+		return App.getBotTextChannel().sendMessage(embed).complete();
 	}
 	
 	@Override
-	public Message sendUsageEmbed(MessageReceivedEvent e, MessageEmbed embed) {
+	public Message sendUsageEmbed(MessageEmbed embed) {
 		embed = new EmbedBuilder(embed).setTitle("Usage - Stopwatch").setColor(Color.YELLOW).build();
-		return e.getChannel().sendMessage(embed).complete();
+		return App.getBotTextChannel().sendMessage(embed).complete();
 	}
 	
 	@Override
-	public void sendHelpMessage(MessageReceivedEvent e) {
+	public void sendHelpMessage() {
 		EmbedBuilder builder = new EmbedBuilder();
 		
 		for(SubCommand subCommand : subCommands) {
-			builder.appendDescription(" - " + subCommand.getName() + " : " + subCommand.getDescription() + "\n");
+			builder.appendDescription("- " + subCommand.getName() + " : " + subCommand.getDescription() + "\n");
 		}
 		
-		sendUsageEmbed(e, builder.build());
+		sendUsageEmbed(builder.build());
 	}
 }

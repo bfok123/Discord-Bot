@@ -33,16 +33,18 @@ public class MusicLeaveSubCommand extends SubCommand {
 		
 		if(msgArgs.length == 1) {
 			if(!manager.isConnected()) {
-				parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", the bot is not connected to a voice channel.").build());
+				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", the bot is not connected to a voice channel.").build());
 			} else if(manager.isConnected()) {
 				VoiceChannel channel = manager.getConnectedChannel();
 				manager.setSendingHandler(null);
 				manager.closeAudioConnection();
-				parentCommand.sendEmbed(e, new EmbedBuilder().setTitle("Left Channel").setDescription(channel.getName()).build());
-				player.setPaused(true);
+				parentCommand.sendEmbed(new EmbedBuilder().setTitle("Left Channel").setDescription(channel.getName()).build());
+				if(player.getPlayingTrack() != null) {
+					player.setPaused(true);
+				}
 			}
 		} else {
-			parentCommand.sendErrorEmbed(e, new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
+			parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", that is not a valid command.").build());
 		}
 	}
 
