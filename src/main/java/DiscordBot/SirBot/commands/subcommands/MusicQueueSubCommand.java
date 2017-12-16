@@ -37,6 +37,7 @@ public class MusicQueueSubCommand extends SubCommand {
 			
 			if(queue.length == 0) {
 				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", there are no songs currently in queue.").build());
+				return;
 			} else {
 				builder.setTitle("Queue (" + queue.length + " song(s))");
 				

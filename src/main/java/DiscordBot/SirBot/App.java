@@ -11,6 +11,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 
+import DiscordBot.SirBot.commands.BlackjackCommand;
 import DiscordBot.SirBot.commands.HelpCommand;
 import DiscordBot.SirBot.commands.InsultCommand;
 import DiscordBot.SirBot.commands.MusicCommand;
@@ -63,6 +64,7 @@ public class App
 			jda.addEventListener(helpCommand.registerCommand(new InsultCommand()));
 			jda.addEventListener(helpCommand.registerCommand(new MusicCommand(manager, playerManager, player)));
 			jda.addEventListener(helpCommand.registerCommand(new TextChannelCommand()));
+			jda.addEventListener(helpCommand.registerCommand(new BlackjackCommand()));
 			
 			// make MainFrame
 			
