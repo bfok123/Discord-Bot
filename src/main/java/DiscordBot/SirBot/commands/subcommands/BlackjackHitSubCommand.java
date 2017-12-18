@@ -2,6 +2,7 @@ package DiscordBot.SirBot.commands.subcommands;
 
 import java.util.List;
 
+import DiscordBot.SirBot.blackjack.BlackjackHand;
 import DiscordBot.SirBot.blackjack.BlackjackManager;
 import DiscordBot.SirBot.commands.Command;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -29,37 +30,69 @@ public class BlackjackHitSubCommand extends SubCommand {
 	@Override
 	public void onCommand(MessageReceivedEvent e, String[] msgArgs) {
 		final String mention = "<@" + e.getAuthor().getId() + ">";
-		
+
 		if(msgArgs.length == 1) {
 			String value = blackjackManager.recordHit(e.getAuthor());
 			if(value != null && blackjackManager.waitingForPlayerDecisions()) {
 				if(!value.contains("bust")) {
 					EmbedBuilder result = new EmbedBuilder().setDescription(mention + ", you got a " + value);
-					String hand = "";
-					for(String c : blackjackManager.getUserHand(e.getAuthor()).getValues()) {
-						hand += "| " + c + " |";
+					BlackjackHand hand = blackjackManager.getUserHand(e.getAuthor());
+					result.appendDescription("\nThis is your new hand: \n");
+					for(String c : hand.getValues()) {
+						result.appendDescription(" +---+ ");
 					}
-					result.appendDescription("\nThis is your new hand: " + hand);
-					parentCommand.sendEmbed(result.build());
+					result.appendDescription("\n");
+					for(String c : hand.getValues()) {
+						if(c.equals("Q")) {
+							result.appendDescription(" | " + c + "  |  ");
+						} else if(c.equals("10")) {
+							result.appendDescription(" | " + c + "  |  ");
+						} else if(c.equals("J")) {
+							result.appendDescription(" |  " + c + "   |  ");
+						} else {
+							result.appendDescription(" |  " + c + "  |  ");
+						}
+					}
+					result.appendDescription("\n");
+					for(String c : hand.getValues()) {
+						result.appendDescription(" +---+ ");
+					}
+					parentCommand.sendEmbed(result.setTitle("Hit").build());
 				} else {
 					String[] parts = value.split(" ");
 					value = parts[0];
 					EmbedBuilder result = new EmbedBuilder().setDescription(mention + ", you got a " + value);
-					String hand = "";
-					for(String c : blackjackManager.getUserHand(e.getAuthor()).getValues()) {
-						hand += "| " + c + " |";
+					BlackjackHand hand = blackjackManager.getUserHand(e.getAuthor());
+					result.appendDescription("\nThis is your new hand: \n");
+					for(String c : hand.getValues()) {
+						result.appendDescription(" +---+ ");
 					}
-					result.appendDescription("\nThis is your new hand: " + hand);
+					result.appendDescription("\n");
+					for(String c : hand.getValues()) {
+						if(c.equals("Q")) {
+							result.appendDescription(" | " + c + "  |  ");
+						} else if(c.equals("10")) {
+							result.appendDescription(" | " + c + "  |  ");
+						} else if(c.equals("J")) {
+							result.appendDescription(" |  " + c + "   |  ");
+						} else {
+							result.appendDescription(" |  " + c + "  |  ");
+						}
+					}
+					result.appendDescription("\n");
+					for(String c : hand.getValues()) {
+						result.appendDescription(" +---+ ");
+					}
 					result.appendDescription("\nYou busted!");
-					parentCommand.sendEmbed(result.build());
+					parentCommand.sendEmbed(result.setTitle("Hit").build());
 					User user = blackjackManager.nextTurn();
 					if(user != null) {
-						parentCommand.sendEmbed(new EmbedBuilder().setDescription("Now " + user.getAsMention() + "'s turn").build());
+						parentCommand.sendEmbed(new EmbedBuilder().setTitle("Next Player").setDescription("Now " + user.getAsMention() + "'s turn").build());
 					} else {
 						List<User> winners = blackjackManager.determineWinners();
 						if(winners != null) {
 							if(winners.size() == 1) {
-								parentCommand.sendEmbed(new EmbedBuilder().setDescription(winners.get(0).getAsMention() + " wins the round with "
+								parentCommand.sendEmbed(new EmbedBuilder().setTitle("Results").setDescription(winners.get(0).getAsMention() + " wins the round with "
 																				  	      + blackjackManager.getUserHand(winners.get(0)).getValue() + "!").build());
 							} else {
 								EmbedBuilder winnersMessage = new EmbedBuilder();
@@ -70,9 +103,10 @@ public class BlackjackHitSubCommand extends SubCommand {
 								}
 								winnersMessage.appendDescription("and " + winners.get(winners.size() - 1).getAsMention() + " ");
 								winnersMessage.appendDescription("win the round with " + blackjackManager.getUserHand(firstWinner).getValue());
+								parentCommand.sendEmbed(winnersMessage.setTitle("Winners!").build());
 							}
 						} else {
-							parentCommand.sendEmbed(new EmbedBuilder().setDescription("Everyone busted, no winner.").build());
+							parentCommand.sendEmbed(new EmbedBuilder().setTitle("Results").setDescription("Everyone busted, no winner.").build());
 						}
 						parentCommand.sendEmbed(new EmbedBuilder().setDescription("Deal cards to start new round.").build());
 					}

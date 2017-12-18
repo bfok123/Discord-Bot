@@ -37,12 +37,12 @@ public class BlackjackStandSubCommand extends SubCommand {
 				blackjackManager.recordStand(e.getAuthor());
 				User user = blackjackManager.nextTurn();
 				if(user != null) {
-					parentCommand.sendEmbed(new EmbedBuilder().setDescription("Now " + user.getAsMention() + "'s turn.").build());
+					parentCommand.sendEmbed(new EmbedBuilder().setTitle("Next Player").setDescription("Now " + user.getAsMention() + "'s turn.").build());
 				} else {
 					List<User> winners = blackjackManager.determineWinners();
 					if(winners != null) {
 						if(winners.size() == 1) {
-							parentCommand.sendEmbed(new EmbedBuilder().setDescription(winners.get(0).getAsMention() + " wins the round with "
+							parentCommand.sendEmbed(new EmbedBuilder().setTitle("Results").setDescription(winners.get(0).getAsMention() + " wins the round with "
 																			  	      + blackjackManager.getUserHand(winners.get(0)).getValue() + "!").build());
 						} else {
 							EmbedBuilder winnersMessage = new EmbedBuilder();
@@ -53,9 +53,10 @@ public class BlackjackStandSubCommand extends SubCommand {
 							}
 							winnersMessage.appendDescription("and " + winners.get(winners.size() - 1).getAsMention() + " ");
 							winnersMessage.appendDescription("win the round with " + blackjackManager.getUserHand(firstWinner).getValue());
+							parentCommand.sendEmbed(winnersMessage.setTitle("Results").build());
 						}
 					} else {
-						parentCommand.sendEmbed(new EmbedBuilder().setDescription("Everyone busted, no winner.").build());
+						parentCommand.sendEmbed(new EmbedBuilder().setTitle("Results").setDescription("Everyone busted, no winner.").build());
 					}
 					parentCommand.sendEmbed(new EmbedBuilder().setDescription("Deal cards to start new round.").build());
 				}

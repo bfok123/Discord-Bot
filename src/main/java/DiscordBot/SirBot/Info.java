@@ -1,7 +1,7 @@
 package DiscordBot.SirBot;
 
 public class Info {
-	public static final String TOKEN = "";
+	public static final String TOKEN = "MzQxNDY5OTI2ODY0ODQ2ODUw.DRcmmA.mgvfLkcgrQJvZLMi9vL27u7Cksc";
 	
 	public static enum CustomEmoji {
 		joshGASM("<:joshGASM:332241246082826240>"),

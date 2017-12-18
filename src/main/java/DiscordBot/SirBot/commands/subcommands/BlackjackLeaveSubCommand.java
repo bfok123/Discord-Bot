@@ -30,9 +30,9 @@ public class BlackjackLeaveSubCommand extends SubCommand {
 		if(msgArgs.length == 1) {
 			if(blackjackManager.isPlaying(e.getAuthor())) {
 				if(blackjackManager.waitingForPlayerDecisions()) {
-					parentCommand.sendEmbed(new EmbedBuilder().setDescription(mention + ", you will be removed from the game after the current round.").build());
+					parentCommand.sendEmbed(new EmbedBuilder().setTitle("Player Leaving").setDescription(mention + ", you will be removed from the game after the current round.").build());
 				} else {
-					parentCommand.sendEmbed(new EmbedBuilder().setDescription(mention + ", you have left the game.").build());
+					parentCommand.sendEmbed(new EmbedBuilder().setTitle("Player Left").setDescription(mention + ", you have left the game.").build());
 				}
 				blackjackManager.removeUser(e.getAuthor());
 			} else {
