@@ -61,6 +61,18 @@ public class TrackScheduler extends AudioEventAdapter {
 		return skippedTrack;
 	}
 	
+	// play next track given previous track (use on track end, because getPlayingTrack() returns null)
+	public AudioTrack nextTrack(boolean addToPreviousSongs, AudioTrack previousTrack) {
+		if(addToPreviousSongs) {
+			previousSongs.offerFirst(previousTrack.makeClone());
+		}
+		
+		player.startTrack(queue.poll(), false);
+		command.resetVotes();
+		
+		return previousTrack;
+	}
+	
 	// skip over a given number of tracks, return those tracks
 	public AudioTrack[] nextTrackNum(int numTracks) {
 		AudioTrack[] skippedTracks = new AudioTrack[numTracks];
@@ -108,8 +120,8 @@ public class TrackScheduler extends AudioEventAdapter {
 
 	@Override
 	public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-		if (endReason.mayStartNext) {
-			nextTrack(true);
+		if(endReason.mayStartNext) {
+			nextTrack(true, track);
 		}
 
 	    // endReason == FINISHED: A track finished or died by an exception (mayStartNext = true).
