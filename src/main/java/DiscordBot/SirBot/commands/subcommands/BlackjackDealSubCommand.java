@@ -41,34 +41,18 @@ public class BlackjackDealSubCommand extends SubCommand {
 					blackjackManager.dealCards();
 					EmbedBuilder result = new EmbedBuilder();
 					for(User user : blackjackManager.getUsers()) {
-						result.appendDescription(mention + ", this is your hand:\n");
+						result.appendDescription(mention + ", this is your hand:");
 						BlackjackHand hand = blackjackManager.getUserHand(user);
 						for(String c : hand.getValues()) {
-							result.appendDescription(" +---+ ");
-						}
-						result.appendDescription("\n");
-						for(String c : hand.getValues()) {
-							if(c.equals("Q")) {
-								result.appendDescription(" | " + c + "  |  ");
-							} else if(c.equals("10")) {
-								result.appendDescription(" | " + c + "  |  ");
-							} else if(c.equals("J")) {
-								result.appendDescription(" |  " + c + "   |  ");
-							} else {
-								result.appendDescription(" |  " + c + "  |  ");
-							}
-						}
-						result.appendDescription("\n");
-						for(String c : hand.getValues()) {
-							result.appendDescription(" +---+ ");
+							result.appendDescription(" | " + c + " |");
 						}
 					}
-					parentCommand.sendEmbed(result.setTitle("Cards Dealt").build());
+					parentCommand.sendEmbed(result.build());
 					if(blackjackManager.playerHasBlackjack()) {
 						blackjackManager.determineWinners();
 						List<User> winners = blackjackManager.determineWinners();
 						if(winners.size() == 1) {
-							parentCommand.sendEmbed(new EmbedBuilder().setTitle("Results").setDescription(winners.get(0).getAsMention() + " wins the round with "
+							parentCommand.sendEmbed(new EmbedBuilder().setDescription(winners.get(0).getAsMention() + " wins the round with "
 																				  	  + "a blackjack!").build());
 						} else {
 							EmbedBuilder winnersMessage = new EmbedBuilder();
@@ -79,7 +63,6 @@ public class BlackjackDealSubCommand extends SubCommand {
 							}
 							winnersMessage.appendDescription("and " + winners.get(winners.size() - 1).getAsMention() + " ");
 							winnersMessage.appendDescription("win the round with blackjacks!");
-							parentCommand.sendEmbed(winnersMessage.setTitle("Results").build());
 						}
 						parentCommand.sendEmbed(new EmbedBuilder().setDescription("Deal cards to start new round.").build());
 					}

@@ -32,9 +32,9 @@ public class BlackjackJoinSubCommand extends SubCommand {
 				parentCommand.sendErrorEmbed(new EmbedBuilder().setDescription(mention + ", you are already playing.").build());
 			} else {
 				if(blackjackManager.waitingForPlayerDecisions()) {
-					parentCommand.sendEmbed(new EmbedBuilder().setTitle("New Player").setDescription(mention + ", you will be added to the game after the current round.").build());
+					parentCommand.sendEmbed(new EmbedBuilder().setDescription(mention + ", you will be added to the game after the current round.").build());
 				} else {
-					parentCommand.sendEmbed(new EmbedBuilder().setTitle("New Player").setDescription(mention + ", you joined the game.").build());
+					parentCommand.sendEmbed(new EmbedBuilder().setDescription(mention + ", you joined the game.").build());
 				}
 				blackjackManager.addUser(e.getAuthor());
 			}
